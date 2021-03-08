@@ -1,5 +1,5 @@
 mod threecubes;
 
 fn main() {
-    threecubes::threecubes(1000, 999);
+    threecubes::basicthreecubes(1000, 999);
 }

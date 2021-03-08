@@ -1,4 +1,4 @@
-pub fn threecubes(maxrange: i64, target: i64) {
+pub fn basicthreecubes(maxrange: i64, target: i64) {
     let mut xtmp; let mut ytmp; let mut ztmp; // tmp vars for caching expontents
     let mut solnum = 0; // # of solutions found
     println!("max range: {}\ntarget: {}\ntotal possible numbers: {}", maxrange, target, i64::pow(2*maxrange, 3));
