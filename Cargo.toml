@@ -13,3 +13,6 @@ lto = "thin"
 [profile.release]
 opt-level = 3
 lto = "thin"
+
+[dependencies]
+rayon = "1.5"

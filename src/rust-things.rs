@@ -18,9 +18,8 @@ fn main() {
     } else if argument == "fibonacci" {
         println!("{:?}", goldenratio::goldenratio(20));
     } else if argument == "pi" {
-        // let goldenr = goldenratio::goldenratio(90);
-        // println!("{:?}", goldenr);
-        println!("{:?}", pi::pi(10000000000));
+        println!("{:?}", pi::pimultithreaded(1000000000));
+        // println!("{:?}", pi::pisinglethreaded(100000000));
     } else {
         println!("Error: argument invalid");
     }
