@@ -10,7 +10,7 @@ pub fn mersenne_prime_basic(start: i32, plus: i32) -> Vec<i32> {
     let numrange = start..(start+plus);
     for x in numrange {
         if is_mersenne_i32(x) {
-            println!("Found: 2^{}-1 ", x);
+            println!("Found: {}", x);
             output.push(x);
         }
     }
@@ -41,7 +41,7 @@ fn check_mersenne(prime: usize) -> bool {
 
 fn is_mersenne_i32(n: i32) -> bool {
     let flag: bool = is_mersenne(n as usize);
-    if flag {println!("Found: {} ", n)};
+    if flag {println!("Found: {}", n)};
     return flag;
 }
 
