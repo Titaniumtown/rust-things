@@ -8,7 +8,7 @@ name = "rust-things"
 
 [profile.dev]
 opt-level = 3
-lto = "thin"
+#lto = "thin"
 
 [profile.release]
 opt-level = 3
@@ -16,4 +16,7 @@ lto = "thin"
 
 [dependencies]
 rayon = "1.5"
-lucas_lehmer = "0.1.0"
+#lucas_lehmer = "0.1.0"
+ramp = "0.5.9"
+primal = "0.3.0"
+num-integer = "0.1.44"

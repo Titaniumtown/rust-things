@@ -1,5 +1,8 @@
-extern crate lucas_lehmer;
+// extern crate lucas_lehmer;
 extern crate rayon;
+extern crate ramp;
+extern crate primal;
+extern crate num_integer;
 
 mod threecubes;
 mod goldenratio;
@@ -31,7 +34,7 @@ fn main() {
     */
 
     // primes:
-    // println!("{:?}", primes::mersenne_prime_basic(1000));
-    println!("{:?}", primes::mersenne_prime_parallel(1000000));
-    
+    // println!("{:?}", primes::mersenne_prime_basic(0, 1000));
+    // println!("{:?}", primes::mersenne_prime_parallel(0, 1000));
+    println!("{:?}", primes::mersenne_prime_parallel(0, 1000));
 }

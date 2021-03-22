@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn basicthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
     println!("max range: {}\ntarget: {}\ntotal possible numbers: {}", maxrange, target, i64::pow(2*maxrange, 3));
 
@@ -32,6 +33,7 @@ pub fn basicthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
     return solutions;
 }
 
+#[allow(dead_code)]
 pub fn getsmallestcube(inlist: Vec<[i64; 3]>) -> [i64; 3] {
     let mut output: [i64; 3] = [0, 0, 0];
     let mut smallestsum = std::i64::MAX;
