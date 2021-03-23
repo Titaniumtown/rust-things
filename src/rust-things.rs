@@ -37,7 +37,7 @@ fn main() {
 
     // primes:
     let prime_opts = [1].to_vec();
-    println!("{:?}", primes::mersenne_prime_parallel(0, 1000, prime_opts));
+    println!("{:?}", primes::mersenne_prime_parallel(0, 100000, prime_opts));
     // println!("{:?}", primes::mersenne_prime_parallel(0, 100000, prime_opts));
     // println!("{:?}", primes::prime_finder_parallel(0, 100000));    
 }

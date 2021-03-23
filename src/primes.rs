@@ -4,9 +4,8 @@ use ramp::Int;
 use indicatif::{ParallelProgressIterator, ProgressBar, ProgressStyle};
 
 // for file stuff
-use std::io::{self, BufRead, Write, Read, BufReader};
+use std::io::{BufRead, Write, BufReader};
 use std::fs::File;
-use std::io::prelude::*;
 use std::path::Path;
 use std::fs::OpenOptions;
 
@@ -42,11 +41,7 @@ fn basic_mersenne_check(prime: usize) -> bool { // used for first pass
 fn get_resumed_primes(start: i32, plus: i32, file_path: &str) -> Vec<i32> {
     let mut path = Path::new(file_path);
     let mut file = File::open(&path).expect("Unable to open");
-    let buffer = BufReader::new(file);
     let mut lines = lines_from_file(path);
-    lines.remove(0);
-    let mut tmp: String = String::new();
-    let mut ele: String = String::new();
 
     let resumed_primes = lines.par_iter().map(|x| {
         return str::replace(&str::replace(x, "Invalid: ", ""), "Prime: ", "").parse::<i32>().unwrap();
@@ -62,53 +57,28 @@ fn lines_from_file(filename: impl AsRef<Path>) -> Vec<String> {
         output.push(line.expect("Could not parse line"));
     }
     return output;
-    /*
-    return buf.lines()
-        .map(|l| l.expect("Could not parse line"))
-        .collect()
-    */
 }
 
-fn init_prime_file(start: i32, plus: i32, file_path: &str) {
-    let init_line = format!("start({}) plus({})", start, plus).to_string();
+fn init_prime_file(file_path: &str) {
     let mut path = Path::new(file_path);
-    let mut file = File::open(&path).expect("Unable to open");
-
-
-    let buffer = BufReader::new(file);
-    let lines = lines_from_file(path);
-    let init_line_write = format!("{}\n", init_line).to_string();
-
-    if !path.exists() || lines.len() == 0 {
-        file = File::create(file_path).expect("unable to create file");
-        file.write_all(init_line_write.as_bytes()).expect("unable to write");
-        return;
-    }
-
-    let firstline = lines.first().unwrap();
-    println!("{}", firstline);
-    if firstline != &init_line {
-        println!("Warning, init lines don't match, overwriting...");
-        file = File::create(file_path).expect("unable to create file");
-        file.write_all(init_line_write.as_bytes()).expect("unable to write");
+    if !path.exists() {
+        let file = File::create(file_path).expect("unable to create file");
     }
 }
 
 // Multi threaded implementation to find Mersenne Primes
 #[allow(dead_code)]
 pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<i32> {
+    println!("Start: {}\nPlus: {}", start, plus);
     let file_path = "./prime_file.txt";
     if options[0] == 1 {
-        init_prime_file(start, plus, file_path);
+        init_prime_file(file_path);
     }
-    let mut numrange = (start..(start+plus));
-    let pb = ProgressBar::new(numrange.len() as u64);
-    pb.set_style(ProgressStyle::default_bar().template(
-        "{spinner:.green} [{elapsed_precise}] [{bar:20.cyan/blue}] ({pos}/{len}, ETA {eta})",
-    ));
+    let numrange = (start..(start+plus));
+
 
     println!("Preprocessing data...");
-    let mut pre_processed: Vec<i32> = numrange.into_par_iter().progress()
+    let mut pre_processed: Vec<i32> = numrange.into_par_iter()
         .filter(|&x| basic_mersenne_check(x as usize)).collect();
     println!("Done preprocessing data!");
 
@@ -119,38 +89,35 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
         .unwrap();
 
     let mut output: Vec<i32> = Vec::new();
-    if options[0] == 1 {
+    let mut lines = lines_from_file(Path::new(file_path));
+    println!("len: {}", lines.len());
+    if lines.len() > 0 {
         let resumed_primes = get_resumed_primes(start, plus, file_path);
         println!("Loading already calculated primes...");
-        pre_processed = pre_processed.into_par_iter().progress()
+        pre_processed = pre_processed.into_par_iter()
             .filter(|x| !resumed_primes.contains(x))
             .collect();
-        output = pre_processed.into_par_iter().progress_with(pb)
-            .filter(|&x|{
-                let mut file = &file;
-                if is_mersenne(x as usize) {
-                    let msg = format!("Prime: {}", x).to_string();
-                    println!("{}", msg);
-                    file.write_all(format!("{}\n", msg).as_bytes());
-                    return true;
-                } 
-                let msg = format!("Invalid: {}", x).to_string();
-                file.write_all(format!("{}\n", msg).as_bytes());
-                return false;
-                
-            }).collect();
-            
-            
-    } else {
-        output = pre_processed.into_par_iter().progress_with(pb)
-            .filter(|&x| {
-                if is_mersenne(x as usize) {
-                    println!("Prime: {}", x);
-                    return true;
-                }
-                return false;
-            }).collect();
     }
+    println!("Starting to calculate primes!");
+    println!("Number to test: {}", pre_processed.len());
+    let pb = ProgressBar::new(pre_processed.len() as u64);
+    pb.set_style(ProgressStyle::default_bar().template(
+        "{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] ({pos}/{len}, {percent}%, {per_sec})",
+    ));
+    output = pre_processed.into_par_iter().progress_with(pb)
+        .filter(|&x|{
+            let mut file = &file;
+            if is_mersenne(x as usize) {
+                let msg = format!("Prime: {}", x).to_string();
+                println!("{}", msg);
+                file.write_all(format!("{}\n", msg).as_bytes());
+                return true;
+            } 
+            let msg = format!("Invalid: {}", x).to_string();
+            file.write_all(format!("{}\n", msg).as_bytes());
+            return false;
+            
+        }).collect();
     return output;
 }
 
