@@ -155,9 +155,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.90"
+version = "0.2.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba4aede83fc3617411dc6993bc8c70919750c1c257c6ca6a502aed6e0e2394ae"
+checksum = "8916b1f6ca17130ec6568feccee27c156ad12037880833a3b842a823236502e7"
 
 [[package]]
 name = "memoffset"
@@ -178,6 +178,16 @@ dependencies = [
  "num-traits 0.2.14",
  "rand 0.4.6",
  "rustc-serialize",
+]
+
+[[package]]
+name = "num-bigint"
+version = "0.4.0"
+source = "git+https://github.com/rust-num/num-bigint.git#125fbbdb4887b995b0fe566b139f36196b5735b5"
+dependencies = [
+ "autocfg",
+ "num-integer",
+ "num-traits 0.2.14",
 ]
 
 [[package]]
@@ -279,7 +289,7 @@ dependencies = [
  "cc",
  "hamming",
  "ieee754",
- "num-bigint",
+ "num-bigint 0.1.44",
  "num-integer",
  "num-traits 0.1.43",
  "rand 0.5.6",
@@ -381,7 +391,7 @@ name = "rust-things"
 version = "0.0.1"
 dependencies = [
  "indicatif",
- "num-integer",
+ "num-bigint 0.4.0",
  "primal",
  "ramp",
  "rayon",

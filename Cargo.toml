@@ -7,18 +7,26 @@ authors = ["Simon Gardling"]
 name = "rust-things"
 
 [profile.dev]
+codegen-units = 1
 opt-level = 3
 target-cpu = "native"
-#lto = "thin"
+#lto = "fat"
 
 [profile.release]
+codegen-units = 1
 opt-level = 3
 target-cpu = "native"
-lto = "thin"
+lto = "fat"
 
 [dependencies]
 rayon = "1.5"
-ramp = "0.5.9"
-primal = "0.3.0"
-num-integer = "0.1.44"
 indicatif = {version = "0.15.0", features = ["rayon"]}
+primal = "0.3.0"
+
+ramp = "0.5.9"
+num-bigint = {git = "https://github.com/rust-num/num-bigint.git"}
+
+#primal = {git = "https://github.com/huonw/primal.git"}
+#rug = {git = "https://gitlab.com/tspiteri/rug.git"}
+#packed_simd = {git = "https://github.com/rust-lang/packed_simd.git", package = "packed_simd_2"}
+
