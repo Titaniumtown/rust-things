@@ -18,7 +18,7 @@ use num_bigint::{BigInt, ToBigInt}; // BigInt
 // cheaty method of checking if it's a merseen prime, it just checks to see if it's a known one.
 fn is_mersenne_cheaty(prime: usize) -> bool {
     let known: Vec<usize> = [2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, 607, 1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941, 11213, 19937, 21701, 23209, 44497, 86243, 110503, 132049, 216091, 756839, 859433, 1257787, 1398269, 2976221, 3021377, 6972593, 13466917, 20996011, 24036583, 25964951, 30402457, 32582657, 37156667, 42643801, 43112609, 57885161, 74207281, 77232917, 82589933].to_vec();
-    return known.contains(prime);
+    return known.contains(&prime);
 }
 
 
@@ -111,7 +111,7 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
     println!("Start: {}\nPlus: {}", start, plus);
 
     let mut file_path = "./prime_file.txt";
-    let cheaty: i8 = options[0];
+    let cheaty: i16 = options[0];
     if cheaty == 1 {
         file_path = "./prime_file_cheaty.txt";
     }
