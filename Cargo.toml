@@ -10,7 +10,7 @@ name = "rust-things"
 codegen-units = 1
 opt-level = 3
 target-cpu = "native"
-#lto = "fat"
+lto = "thin"
 
 [profile.release]
 codegen-units = 1
@@ -22,11 +22,10 @@ lto = "fat"
 rayon = "1.5"
 indicatif = {version = "0.15.0", features = ["rayon"]}
 primal = "0.3.0"
-
+rand = "0.8.3"
 ramp = "0.5.9"
 num-bigint = {git = "https://github.com/rust-num/num-bigint.git"}
 
-#primal = {git = "https://github.com/huonw/primal.git"}
-#rug = {git = "https://gitlab.com/tspiteri/rug.git"}
-#packed_simd = {git = "https://github.com/rust-lang/packed_simd.git", package = "packed_simd_2"}
-
+#gpu compute
+arrayfire = {git = "https://github.com/arrayfire/arrayfire-rust.git"}
+#arrayfire = "3.8.0"

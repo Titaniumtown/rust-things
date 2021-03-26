@@ -14,13 +14,15 @@ use ramp::Int;
 use num_bigint::{BigUint, ToBigUint}; // BigUint
 use num_bigint::{BigInt, ToBigInt}; // BigInt
 
+use ramp::RandomInt;
+
+use arrayfire::*; // gpu compute
 
 // cheaty method of checking if it's a merseen prime, it just checks to see if it's a known one.
 fn is_mersenne_cheaty(prime: usize) -> bool {
     let known: Vec<usize> = [2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, 607, 1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941, 11213, 19937, 21701, 23209, 44497, 86243, 110503, 132049, 216091, 756839, 859433, 1257787, 1398269, 2976221, 3021377, 6972593, 13466917, 20996011, 24036583, 25964951, 30402457, 32582657, 37156667, 42643801, 43112609, 57885161, 74207281, 77232917, 82589933].to_vec();
     return known.contains(&prime);
 }
-
 
 #[inline(always)]
 fn is_mersenne(prime: usize) -> bool {
@@ -59,29 +61,21 @@ fn is_mersenne(prime: usize) -> bool {
     */
 
     // ramp impl:
-    // /*
     let mersenne: Int = Int::from(2).pow(prime) - 1;
-    let mut s: Int = Int::from(4);
 
+    let mut s: Int = Int::from(4);
     for _i in 2..prime {
         s = (&s.pow(2) - 2) % &mersenne;
     }
 
     return s == 0;
-    // */
 }
 
 
 fn basic_mersenne_check(prime: usize) -> bool { // used for first pass
     if prime == 2 {return true};
-
-    if !primal::is_prime(prime as u64) || prime % 2 == 0 {
-        return false;
-    }
-
-    return true
+    return primal::is_prime(prime as u64);
 }
-
 
 fn get_resumed_primes(file_path: &str) -> Vec<i32> {
     let path = Path::new(file_path);
@@ -123,16 +117,7 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
 
     let numrange = start..(start+plus);
 
-    println!("Preprocessing data...");
-    let mut pre_processed: Vec<i32> = numrange.into_par_iter()
-        .filter(|&x| basic_mersenne_check(x as usize)).collect();
-    println!("Done preprocessing data!");
-
-    let file = OpenOptions::new()
-        .write(true)
-        .append(true)
-        .open(file_path)
-        .unwrap();
+    let mut pre_processed: Vec<i32> = numrange.collect();
 
     let lines = lines_from_file(Path::new(file_path));
     println!("# of lines: {}", lines.len());
@@ -145,29 +130,26 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
     } else {
         println!("File: {} is empty, skipping", file_path);
     }
+
+    println!("Preprocessing data...");
+    let mut pre_processed: Vec<i32> = pre_processed.into_par_iter()
+        .filter(|&x| basic_mersenne_check(x as usize)).collect();
+    println!("Done preprocessing data!");
+
+    let file = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(file_path)
+        .unwrap();
+
+
     println!("Starting to calculate primes!");
     println!("Number to test: {}", pre_processed.len());
     let pb = ProgressBar::new(pre_processed.len() as u64);
     pb.set_style(ProgressStyle::default_bar().template(
         "{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] ({pos}/{len}, {percent}%, {per_sec})",
     ));
-    if cheaty == 1 {
-        return pre_processed.into_par_iter().progress_with(pb)
-            .filter(|&x|{
-                let mut file = &file;
-                let flag = is_mersenne_cheaty(x as usize);
-                let mut msg: String = String::new();
-                if flag {
-                    msg = format!("Prime: {}", x).to_string();
-                    println!("{}", msg);
-                } else {
-                    msg = format!("Invalid: {}", x).to_string();
-                }
-                file.write_all(format!("{}\n", msg).as_bytes());
-                return flag;
-                
-            }).collect();
-    } else {
+
     return pre_processed.into_par_iter().progress_with(pb)
             .filter(|&x|{
                 let mut file = &file;
@@ -183,7 +165,10 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
                 return flag;
                 
             }).collect();
-    }
+}
+
+fn odd_num_gen(num: i32) -> Vec<i32> {
+    return (1..num).into_par_iter().filter(|&x| x % 2 != 0).collect();
 }
 
 // Multi threaded implementation to find normal Primes
