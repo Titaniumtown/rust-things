@@ -19,10 +19,10 @@ pub fn pimultithreaded(n: i64) -> f64 {
 #[allow(dead_code)]
 pub fn pimultithreaded_rug(n: i32, precision: u32) -> Float {
     let total: Vec<Float> = (1..n).into_par_iter().map(|i| {
-        let exp_tmp: Float = Float::with_val(precision, Float::i_pow_u(i, 5));
+        let exp_tmp: Float = Float::with_val(precision, Float::i_pow_u(i, 2)); // todo - figure out why `with_val` needs i32 instead of i64 and find solution
         1.0/exp_tmp
     }).collect();
-    let mut sum_tmp: Float = Float::with_val(precision, 0);
+    let mut sum_tmp: Float = Float::with_val(precision, 0); 
     for ele in total.iter() {
         sum_tmp += ele
     }

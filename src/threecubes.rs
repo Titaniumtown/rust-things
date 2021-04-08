@@ -7,11 +7,10 @@ pub fn basicthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
     let mut xtmp; let mut ytmp; // tmp vars for caching expontents
     let mut solnum = 0; // # of solutions found
     let mut solutions: Vec<[i64; 3]> = Vec::new(); // list of solutions found
-    let mut expontents = Vec::new(); // list that holds cached exponents
 
     // cache exponents to be called later
     println!("precomputing exponents...");
-    expontents = (-maxrange..maxrange).into_par_iter().map(|x| i64::pow(x,3)).collect();
+    let expontents: Vec<i64> = (-maxrange..maxrange).into_par_iter().map(|x| i64::pow(x,3)).collect();
     println!("done precomputting exponents!");
 
 
@@ -40,11 +39,10 @@ pub fn threadedthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
     let mut xtmp; let mut ytmp; // tmp vars for caching expontents
     let mut solnum = 0; // # of solutions found
     let mut solutions: Vec<[i64; 3]> = Vec::new(); // list of solutions found
-    let mut expontents = Vec::new(); // list that holds cached exponents
 
     // cache exponents to be called later
     println!("precomputing exponents...");
-    expontents = (-maxrange..maxrange).into_par_iter().map(|x| i64::pow(x,3)).collect();
+    let expontents: Vec<i64> = (-maxrange..maxrange).into_par_iter().map(|x| i64::pow(x,3)).collect();
     println!("done precomputting exponents!");
     
     let mut tmp: Vec<i64>;
