@@ -15,11 +15,6 @@ use num_bigint::{BigUint, ToBigUint}; // BigUint
 use num_bigint::{BigInt, ToBigInt}; // BigInt
 
 use ramp::RandomInt;
-<<<<<<< HEAD
-=======
-
-use arrayfire::*; // gpu compute
->>>>>>> 26337cb7271aadc9b274f888e652241cfedc5e8f
 
 // cheaty method of checking if it's a merseen prime, it just checks to see if it's a known one.
 fn is_mersenne_cheaty(prime: usize) -> bool {
@@ -73,11 +68,6 @@ fn is_mersenne(prime: usize) -> bool {
 
     return s == 0;
 }
-
-fn rewrite(n: &Int) -> (Int, Int) {
-    let one: Int = Int::one();
-    let two: Int = Int::one() + Int::one();
-    let mut i: Int = Int::zero();
 
 fn basic_mersenne_check(prime: usize) -> bool { // used for first pass
     if prime == 2 {return true};
@@ -168,7 +158,7 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
                 } else {
                     msg = format!("Invalid: {}", x).to_string();
                 }
-                file.write_all(format!("{}\n", msg).as_bytes());
+                file.write_all(format!("{}\n", msg).as_bytes()).expect("Could write to file");
                 return flag;
                 
             }).collect();

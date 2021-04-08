@@ -6,11 +6,13 @@ extern crate indicatif;
 extern crate ramp;
 extern crate num_bigint;
 extern crate rand;
+extern crate rug;
 
 mod threecubes;
 mod goldenratio;
 mod pi;
 mod primes;
+mod newton_aprox;
 
 use std::env::args; // todo - implement cmd args
 
@@ -35,13 +37,17 @@ fn main() {
 
     // pi:
     // /*
-    println!("{:?}", pi::pimultithreaded(10000000000));
+    // println!("{:?}", pi::pimultithreaded(10000000000));
     // println!("{:?}", pi::pisinglethreaded(1000000000));
     // */
+    println!("{:?}", pi::pimultithreaded_rug(100, 128));
 
     // primes:
-    let prime_opts = [0].to_vec();
-    println!("{:?}", primes::mersenne_prime_parallel(0, 150000, prime_opts));
+    // let prime_opts = [0].to_vec();
+    // println!("{:?}", primes::mersenne_prime_parallel(0, 150000, prime_opts));
     // println!("{:?}", primes::mersenne_prime_parallel(0, 20000, prime_opts));
     // println!("{:?}", primes::prime_finder_parallel(0, 20000));
+
+    // newton aprox
+    // println!("{:?}", newton_aprox::test(100));
 }
