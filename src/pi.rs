@@ -1,5 +1,4 @@
-use rayon::iter::IntoParallelIterator;
-use rayon::iter::ParallelIterator;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
 #[allow(dead_code)]
 pub fn pisinglethreaded(n: i64) -> f64 {
@@ -12,6 +11,6 @@ pub fn pisinglethreaded(n: i64) -> f64 {
 
 #[allow(dead_code)]
 pub fn pimultithreaded(n: i64) -> f64 {
-    let total: f64 = (1..n).into_par_iter().map(|i| (1.0/(f64::powi(i as f64,2 )))).sum();
+    let total: f64 = (1..n).into_par_iter().map(|i| (1.0/(f64::powi(i as f64, 2)))).sum();
     return (6.0*total).sqrt();
 }
