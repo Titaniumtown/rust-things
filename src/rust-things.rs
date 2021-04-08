@@ -6,10 +6,12 @@ extern crate indicatif;
 extern crate ramp;
 extern crate num_bigint;
 extern crate rand;
+
 mod threecubes;
 mod goldenratio;
 mod pi;
 mod primes;
+mod opencl;
 
 use std::env::args; // todo - implement cmd args
 
@@ -33,10 +35,10 @@ fn main() {
     // println!("{:?}", goldenratio::goldenratio(20));
 
     // pi:
-    /*
-    println!("{:?}", pi::pimultithreaded(1000000000));
+    // /*
+    println!("{:?}", pi::pimultithreaded(10000000000));
     // println!("{:?}", pi::pisinglethreaded(1000000000));
-    */
+    // */
 
     // primes:
     let prime_opts = [0].to_vec();
