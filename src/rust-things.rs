@@ -11,7 +11,6 @@ mod threecubes;
 mod goldenratio;
 mod pi;
 mod primes;
-mod opencl;
 
 use std::env::args; // todo - implement cmd args
 
