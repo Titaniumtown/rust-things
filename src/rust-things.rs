@@ -14,7 +14,7 @@ mod pi;
 mod primes;
 mod newton_aprox;
 
-use std::env::args; // todo - implement cmd args
+ // todo - implement cmd args
 
 fn main() {
     #[allow(unused_mut)]

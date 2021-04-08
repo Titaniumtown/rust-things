@@ -1,4 +1,4 @@
-use rayon::iter::{ParallelIterator, IntoParallelRefIterator, IntoParallelIterator};
+use rayon::iter::{ParallelIterator, IntoParallelIterator};
 
 #[allow(dead_code)]
 pub fn basicthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
@@ -16,11 +16,11 @@ pub fn basicthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
 
 
     println!("now doing the real number crunching...");
-    for x in (-maxrange..maxrange) {
+    for x in -maxrange..maxrange {
         xtmp = expontents[(x+maxrange) as usize];
-        for y in (-maxrange..maxrange) {
+        for y in -maxrange..maxrange {
             ytmp = expontents[(y+maxrange) as usize];
-            for z in (-maxrange..maxrange) {
+            for z in -maxrange..maxrange {
                 if xtmp+ytmp+expontents[(z+maxrange) as usize] == target {
                     println!("found: {}, {}, {}", x, y, z);
                     solnum += 1;
@@ -30,7 +30,7 @@ pub fn basicthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
         }
     }
     println!("total found: {}", solnum);
-    return solutions;
+    solutions
 }
 
 #[allow(dead_code)]
@@ -50,13 +50,13 @@ pub fn threadedthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
     let mut tmp: Vec<i64>;
     
     println!("now doing the real number crunching...");
-    for x in (-maxrange..maxrange) {
+    for x in -maxrange..maxrange {
         xtmp = expontents[(x+maxrange) as usize];
-        for y in (-maxrange..maxrange) {
+        for y in -maxrange..maxrange {
             ytmp = expontents[(y+maxrange) as usize];
             // for z in range {
             tmp = (-maxrange..maxrange).into_par_iter().filter(|&z| xtmp+ytmp+&expontents[(z+maxrange) as usize] == target).collect();
-            if tmp.len() > 0 {
+            if !tmp.is_empty() {
                 for i in tmp {
                     solnum += 1;
                     solutions.push([x,y,i]);
@@ -66,7 +66,7 @@ pub fn threadedthreecubes(maxrange: i64, target: i64) -> Vec<[i64; 3]> {
     }
     
     println!("total found: {}", solnum);
-    return solutions;
+    solutions
 }
 
 
@@ -83,5 +83,5 @@ pub fn getsmallestcube(inlist: Vec<[i64; 3]>) -> [i64; 3] {
             smallestsum = procsum;
         }
     }
-    return output;
+    output
 }
