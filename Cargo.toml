@@ -16,16 +16,12 @@ lto = "thin"
 codegen-units = 1
 opt-level = 3
 target-cpu = "native"
-lto = "fat"
+lto = "thin"
 
 [dependencies]
-rayon = "1.5"
-indicatif = {version = "0.15.0", features = ["rayon"]}
+rayon = "1.5.1"
+indicatif = {version = "0.16.2", features = ["rayon"]}
 primal = "0.3.0"
-rand = "0.8.3"
-ramp = "0.5.9"
+rand = "0.8.4"
+ramp = "0.6.0"
 num-bigint = {git = "https://github.com/rust-num/num-bigint.git"}
-
-#gpu compute
-arrayfire = {git = "https://github.com/arrayfire/arrayfire-rust.git"}
-#arrayfire = "3.8.0"

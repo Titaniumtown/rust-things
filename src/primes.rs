@@ -16,7 +16,6 @@ use num_bigint::{BigInt, ToBigInt}; // BigInt
 
 use ramp::RandomInt;
 
-use arrayfire::*; // gpu compute
 
 // cheaty method of checking if it's a merseen prime, it just checks to see if it's a known one.
 fn is_mersenne_cheaty(prime: usize) -> bool {
