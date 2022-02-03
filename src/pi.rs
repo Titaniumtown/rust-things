@@ -3,9 +3,9 @@ use rayon::iter::{IntoParallelIterator, ParallelIterator};
 #[allow(dead_code)]
 pub fn pisinglethreaded(n: i64) -> f64 {
     let mut total: f64 = 0.0;
-    for i in 1..n {
+    (1..n).for_each(|i| {
         total += 1.0/(f64::powi(i as f64, 2));
-    }
+    });
     return (6.0*total).sqrt();
 }
 
