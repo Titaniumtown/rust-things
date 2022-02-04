@@ -44,8 +44,8 @@ fn is_mersenne(prime: usize) -> bool {
 #[allow(dead_code)]
 fn lucas_lehmer_bigint(p: u32) -> bool {
     //p must be an odd prime
-    let m = (BigInt::one() << p) - 1;
-    let mut s = BigInt::new(Sign::Plus, vec![4]);
+    let m = (BigInt::one() << p) - 1; // (2^p)-1
+    let mut s = BigInt::new(Sign::Plus, vec![4]); // creates bigint with value 4
     for _ in 1..=p - 2 {
         s = s.pow(2) - 2;
         while s >= m {
@@ -60,12 +60,12 @@ fn lucas_lehmer_bigint(p: u32) -> bool {
 }
 
 
-// Much faster than any other implementations
+// Much faster than any other implementations (about 7x faster than bigint)
 #[inline(always)]
 #[allow(dead_code)]
 fn lucas_lehmer_rug(p: u32) -> bool {
     //p must be an odd prime
-    let m = (Integer::from(1) << p) - Integer::from(1);
+    let m = (Integer::from(1) << p) - Integer::from(1); // (2^p)-1
     let mut s = Integer::from(4);
     let mut tmp_1 = Integer::new();
     let mut tmp_2 = Integer::new();
@@ -86,7 +86,7 @@ fn lucas_lehmer_rug(p: u32) -> bool {
 
 
 #[inline]
-fn init_mersenne_check(prime: usize) -> bool { // used for first pass
+fn basic_isprime(prime: usize) -> bool { // used for first pass
     if prime == 2 {return true};
     return primal::is_prime(prime as u64);
 }
@@ -147,7 +147,7 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
 
     println!("Preprocessing data...");
     let pre_processed: Vec<i32> = pre_processed.into_par_iter()
-        .filter(|&x| init_mersenne_check(x as usize)).collect();
+        .filter(|&x| basic_isprime(x as usize)).collect();
     println!("Done preprocessing data!");
 
     let file = OpenOptions::new()
@@ -191,20 +191,30 @@ fn odd_num_gen(num: i32) -> Vec<i32> {
 pub fn prime_finder_parallel(start: i32, plus: i32) -> Vec<i32> {
     let numrange = start..(start+plus);
     let output: Vec<i32> = numrange.into_par_iter().progress()
-        .filter(|&x| return primal::is_prime(x as u64)).collect();
+        .filter(|&x| return basic_isprime(x as usize)).collect();
     return output;
 }
 
+
+// Tests!!!
+#[allow(dead_code)]
+static TEST_RANGE: usize = 1000;
+
 #[test]
 fn test_lehmer_test_bitint() {
-    for i in 3..100 {
+    for i in 3..TEST_RANGE {
         assert!(is_mersenne_cheaty(i) == lucas_lehmer_bigint(i as u32), true);
     }
 }
 
 #[test]
 fn test_lehmer_test_rug() {
-    for i in 3..100 {
+    for i in 3..TEST_RANGE {
         assert!(is_mersenne_cheaty(i) == lucas_lehmer_rug(i as u32), true);
     }
+}
+
+#[test]
+fn big_test() {
+    assert!(is_mersenne_cheaty(44497) == lucas_lehmer_rug(44497), true);
 }
