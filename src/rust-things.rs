@@ -16,35 +16,36 @@ mod goldenratio;
 mod pi;
 mod primes;
 
+enum Action {
+    ThreeCubes,
+    GoldenRatioCalc,
+    PiCalc,
+    MersennePrime
+}
+
+
 fn main() {
-    #[allow(unused_mut)]
-    // let mut output: String; // Output variable
+    let target_action = Action::MersennePrime;
 
-    // sum of three cubes stuff:
-    /*
-    #[allow(unused_mut)]
-    let mut smallestcube;
-
-    // let output = threecubes::basicthreecubes(200, 69);
-    // let output = threecubes::threadedthreecubes(200, 69);
-    println!("List of cubes: {:?}", output);
-    smallestcube = threecubes::getsmallestcube(output);
-    println!("Smallest cube: {:?}", smallestcube);
-    // */
-
-    // goldenratio:
-    // println!("{:?}", goldenratio::goldenratio(20));
-
-    // pi:
-    // /*
-    // println!("{:?}", pi::pimultithreaded(10000000000));
-    // println!("{:?}", pi::pisinglethreaded(1000000000));
-    // */
-
-    // primes:
-    let prime_opts = [0].to_vec();
-    // println!("{:?}", primes::mersenne_prime_parallel(0, 150000, prime_opts));
-    // println!("{:?}", primes::mersenne_prime_parallel(0, 20000, prime_opts));
-    println!("{:?}", primes::mersenne_prime_parallel(0, 10000, prime_opts));
-    // println!("{:?}", primes::mersenne_prime_parallel(0, 100, prime_opts));
+    match target_action {
+        Action::ThreeCubes => {
+            let maxrange = 200;
+            let target = 30;
+    
+            println!("Max Range: {} Target Value: {}", maxrange, target);
+            let output = threecubes::basicthreecubes(maxrange, target);
+            println!("List of cubes: {:?}", output);
+            let smallestcube = threecubes::getsmallestcube(output);
+            println!("Smallest cube: {:?}", smallestcube);
+        },
+        Action::GoldenRatioCalc => {
+            println!("{:?}", goldenratio::goldenratio(20));
+        },
+        Action::PiCalc => {
+            println!("{:?}", pi::pisinglethreaded(1000000000));
+        },
+        Action::MersennePrime => {
+            println!("{:?}", primes::mersenne_prime_parallel(0, 10000, true));
+        }
+    }
 }

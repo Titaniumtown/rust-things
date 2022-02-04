@@ -115,34 +115,34 @@ fn lines_from_file(filename: impl AsRef<Path>) -> Vec<String> {
 // Multi threaded implementation to find Mersenne Primes
 #[allow(dead_code)]
 #[inline(always)]
-pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<i32> {
+pub fn mersenne_prime_parallel(start: i32, plus: i32, save_file: bool) -> Vec<i32> {
     println!("Start: {}\nPlus: {}", start, plus);
 
-    let mut file_path = "./prime_file.txt";
-    let cheaty: i16 = options[0];
-    if cheaty == 1 {
-        file_path = "./prime_file_cheaty.txt";
-    }
-
+    let file_path = "./prime_file.txt";
     let path = Path::new(file_path);
-    if !path.exists() {
-        File::create(file_path).expect("unable to create file");
+
+    if (save_file) {
+        if !path.exists() {
+            File::create(file_path).expect("unable to create file");
+        }
     }
 
     let numrange = start..(start+plus);
 
     let mut pre_processed: Vec<i32> = numrange.collect();
 
-    let lines = lines_from_file(Path::new(file_path));
-    println!("# of lines: {}", lines.len());
-    if lines.len() > 0 {
-        let resumed_primes = get_from_file(file_path);
-        println!("Loading already calculated primes...");
-        pre_processed = pre_processed.into_par_iter()
-            .filter(|x| !resumed_primes.contains(x))
-            .collect();
-    } else {
-        println!("File: {} is empty, skipping", file_path);
+    if (save_file) {
+        let lines = lines_from_file(Path::new(file_path));
+        println!("# of lines: {}", lines.len());
+        if lines.len() > 0 {
+            let resumed_primes = get_from_file(file_path);
+            println!("Loading already calculated primes...");
+            pre_processed = pre_processed.into_par_iter()
+                .filter(|x| !resumed_primes.contains(x))
+                .collect();
+        } else {
+            println!("File: {} is empty, skipping", file_path);
+        }
     }
 
     println!("Preprocessing data...");
@@ -168,14 +168,16 @@ pub fn mersenne_prime_parallel(start: i32, plus: i32, options: Vec<i16>) -> Vec<
             .filter(|&x|{
                 let mut file = &file;
                 let flag = lucas_lehmer_rug(x as u32);
-                let msg: String;
-                if flag {
-                    msg = format!("P: {}", x).to_string();
-                    println!("{}", msg);
-                } else {
-                    msg = format!("I: {}", x).to_string();
+                if (save_file) {
+                    let msg: String;
+                    if flag {
+                        msg = format!("P: {}", x).to_string();
+                        println!("{}", msg);
+                    } else {
+                        msg = format!("I: {}", x).to_string();
+                    }
+                    file.write_all(format!("{}\n", msg).as_bytes());
                 }
-                file.write_all(format!("{}\n", msg).as_bytes());
                 return flag;
                 
             }).collect();
@@ -217,4 +219,9 @@ fn test_lehmer_test_rug() {
 #[test]
 fn big_test() {
     assert!(is_mersenne_cheaty(44497) == lucas_lehmer_rug(44497), true);
+}
+
+#[test]
+fn prime_parallel_test() {
+    assert!(vec![3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, 607, 1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941] == mersenne_prime_parallel(0, 10000, false), true);
 }
