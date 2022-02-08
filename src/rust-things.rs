@@ -3,7 +3,6 @@ extern crate primal;
 extern crate indicatif;
 
 // integers
-extern crate num_bigint;
 extern crate rand;
 extern crate num_traits;
 extern crate rug;

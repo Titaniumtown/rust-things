@@ -160,16 +160,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "num-bigint"
-version = "0.4.3"
-source = "git+https://github.com/rust-num/num-bigint.git#e77ffacafef7e8fa2c2b990489b7aa30dceaed64"
-dependencies = [
- "autocfg",
- "num-integer",
- "num-traits",
-]
-
-[[package]]
 name = "num-integer"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -358,7 +348,6 @@ name = "rust-things"
 version = "0.0.1"
 dependencies = [
  "indicatif",
- "num-bigint",
  "num-traits",
  "primal",
  "rand",

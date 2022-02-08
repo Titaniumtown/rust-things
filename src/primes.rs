@@ -7,7 +7,6 @@ use std::fs::{File, OpenOptions};
 use std::path::Path;
 
 // Integers
-use num_bigint::{BigInt, Sign};
 use num_traits::identities::{One, Zero};
 use rug::{Assign, Integer, ops::Pow};
 
@@ -18,26 +17,6 @@ fn is_mersenne_cheaty(prime: usize) -> bool {
 }
 
 // https://github.com/roiban1344/mersenne_primes/blob/main/packages/num_bigint/lucas_lehmer/src/main.rs
-// Magic code, much faster than previous implementation.
-#[inline(always)]
-#[allow(dead_code)]
-fn lucas_lehmer_bigint(p: u32) -> bool {
-    //p must be an odd prime
-    let m = (BigInt::one() << p) - 1; // (2^p)-1
-    let mut s = BigInt::new(Sign::Plus, vec![4]); // creates bigint with value 4
-    for _ in 1..=p - 2 {
-        s = s.pow(2) - 2;
-        while s >= m {
-            s = (&s >> p) + (s & &m);
-            if s == m {
-                s = BigInt::zero();
-                break;
-            }
-        }
-    }
-    s.sign() == Sign::NoSign
-}
-
 // Much faster than any other implementations (about 7x faster than bigint)
 #[inline(always)]
 #[allow(dead_code)]
@@ -179,13 +158,6 @@ pub fn prime_finder_parallel(start: i32, plus: i32) -> Vec<i32> {
 // Tests!!!
 #[allow(dead_code)]
 static TEST_RANGE: usize = 1000;
-
-#[test]
-fn test_lehmer_test_bitint() {
-    for i in 3..TEST_RANGE {
-        assert!(is_mersenne_cheaty(i) == lucas_lehmer_bigint(i as u32), true);
-    }
-}
 
 #[test]
 fn test_lehmer_test_rug() {
