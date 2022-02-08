@@ -1,45 +1,24 @@
 use rayon::iter::{ParallelIterator, IntoParallelRefIterator, IntoParallelIterator};
 use indicatif::{ParallelProgressIterator, ProgressBar, ProgressStyle};
 
-// for file io
+// For fileio
 use std::io::{BufRead, Write, BufReader};
 use std::fs::{File, OpenOptions};
 use std::path::Path;
 
-// integers
+// Integers
 use num_bigint::{BigInt, Sign};
 use num_traits::identities::{One, Zero};
 use rug::{Assign, Integer, ops::Pow};
 
-// cheaty method of checking if it's a merseen prime, it just checks to see if it's a known one.
+// Cheaty method of checking if it's a merseen prime, it just checks to see if it's a known one.
 #[allow(dead_code)]
 fn is_mersenne_cheaty(prime: usize) -> bool {
     return [2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, 607, 1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941, 11213, 19937, 21701, 23209, 44497, 86243, 110503, 132049, 216091, 756839, 859433, 1257787, 1398269, 2976221, 3021377, 6972593, 13466917, 20996011, 24036583, 25964951, 30402457, 32582657, 37156667, 42643801, 43112609, 57885161, 74207281, 77232917, 82589933].contains(&prime);
 }
 
-// Old way, much slower
-/*
-lazy_static! {
-    static ref ZERO: BigUint = BigUint::zero();
-    static ref ONE: BigUint = 1.to_biguint().unwrap();
-    static ref TWO: BigUint = 2.to_biguint().unwrap();
-}
-
-#[inline(always)]
-fn is_mersenne(prime: usize) -> bool {
-    let mersenne: BigUint = (&*TWO).pow(prime as u32) - &*ONE;
-    let mut s: BigUint = 4.to_biguint().unwrap();
-
-    for _ in 2..prime {
-        s = (&s.pow(2) - &*TWO) % &mersenne;
-    }
-
-    return &s == &*ZERO;
-}
-*/
-
 // https://github.com/roiban1344/mersenne_primes/blob/main/packages/num_bigint/lucas_lehmer/src/main.rs
-// magic code, much faster than previous implementation.
+// Magic code, much faster than previous implementation.
 #[inline(always)]
 #[allow(dead_code)]
 fn lucas_lehmer_bigint(p: u32) -> bool {
@@ -58,7 +37,6 @@ fn lucas_lehmer_bigint(p: u32) -> bool {
     }
     s.sign() == Sign::NoSign
 }
-
 
 // Much faster than any other implementations (about 7x faster than bigint)
 #[inline(always)]
@@ -86,7 +64,7 @@ fn lucas_lehmer_rug(p: u32) -> bool {
 
 
 #[inline]
-fn basic_isprime(prime: usize) -> bool { // used for first pass
+fn basic_isprime(prime: usize) -> bool {
     if prime == 2 {return true};
     return primal::is_prime(prime as u64);
 }

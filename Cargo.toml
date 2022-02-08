@@ -26,4 +26,3 @@ rand = "0.8.4"
 num-bigint = {git = "https://github.com/rust-num/num-bigint.git"}
 num-traits = "0.2.14"
 rug = "1.15.0"
-lazy_static = "1.4.0"

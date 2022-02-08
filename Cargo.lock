@@ -358,7 +358,6 @@ name = "rust-things"
 version = "0.0.1"
 dependencies = [
  "indicatif",
- "lazy_static",
  "num-bigint",
  "num-traits",
  "primal",

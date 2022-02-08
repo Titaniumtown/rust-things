@@ -8,21 +8,18 @@ extern crate rand;
 extern crate num_traits;
 extern crate rug;
 
-#[macro_use]
-extern crate lazy_static;
-
 mod threecubes;
 mod goldenratio;
 mod pi;
 mod primes;
 
+#[allow(dead_code)]
 enum Action {
     ThreeCubes,
     GoldenRatioCalc,
     PiCalc,
     MersennePrime
 }
-
 
 fn main() {
     let target_action = Action::MersennePrime;
